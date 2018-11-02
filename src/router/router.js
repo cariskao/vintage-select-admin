@@ -2,21 +2,39 @@ import Vue from 'vue'
 import Router from 'vue-router'
 Vue.use(Router)
 
-import HelloWorld from '@/components/HelloWorld'
 import Login from '@/components/pages/Login'
+import Admin from '@/components/pages/Admin'
+import ProductList from '@/components/ProductList'
 
-
-
-export default new Router({
+const router = new Router({
   routes: [
-    {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
-    },
     {
       path: '/login',
       component: Login
-    }
+    },
+    {
+      path: '/admin',
+      redirect: '/admin/products',
+      component: Admin,
+      meta: {
+        loginRequired: true
+      },
+      children: [
+        {
+          path: 'products',
+          alias: 'productlist',
+          component: ProductList,
+          meta: {
+            loginRequired: true
+          },
+        }
+      ]
+    },
+    {
+      path: '*',
+      redirect: '/login'
+    },
   ]
 })
+
+export default router

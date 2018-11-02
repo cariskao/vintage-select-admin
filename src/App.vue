@@ -7,16 +7,32 @@
 <script>
 export default {
   name: 'App',
-  created() {
-    const API = `${process.env.API_PATH}/api/${process.env.CUSTOM_API_PATH}/products`
+  methods: {
 
-    this.$http.get(API)
-      .then(response => console.log(response))
-  },
+  }
+  
 }
 </script>
 
 <style lang="scss">
 @import '@/assets/all.scss';
+
+// just for login style
+// html,
+// body {
+//   height: 100%;
+// }
+// body {
+//   display: -ms-flexbox;
+//   display: flex;
+//   -ms-flex-align: center;
+//   justify-content: center;
+//   align-items: center;
+//   padding-top: 40px;
+//   padding-bottom: 40px;
+//   background-color: #f5f5f5;
+// }
+
+
 </style>
 
