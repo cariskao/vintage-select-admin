@@ -30,12 +30,6 @@ export default new Store({
             if(data.success){
               router.push('/login')
             }
-
-            // return new Promise((resolve, reject) => {
-            //   if(data.success){
-            //     resolve()
-            //   }
-            // })
           }
         )
     },
@@ -87,7 +81,7 @@ export default new Store({
       const API = `
         ${process.env.API_PATH}/api/${process.env.CUSTOM_API_PATH}/admin/product/${productId}
       `
-      axios.delete(API)
+      return axios.delete(API)
         .then(
           ({data}) => {
             if(data.success){

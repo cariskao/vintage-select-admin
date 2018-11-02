@@ -45,9 +45,6 @@ router.beforeEach( (to, from, next) => {
               path: '/login'
             })
           }
-          // data.success === true
-          //   ? next()
-          //   : alert('錯誤！請重新登入')
         }
       )
       .catch(e => {

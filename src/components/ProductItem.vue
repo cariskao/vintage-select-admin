@@ -7,17 +7,16 @@
     <td :class="enabledColor">{{enabledSpan}}</td>
     <td>
       <button class="btn btn-outline-primary btn-sm"
-        @click="edit(productInfo)"
+        @click="editProduct(productInfo)"
       >編輯</button>
       <button class="btn btn-outline-danger btn-sm"
-        @click="deleteProduct(productInfo.id)"
+        @click="deleteProduct(productInfo)"
       >刪除</button>
     </td>
   </tr>
 </template>
 
 <script>
-import {mapActions} from 'vuex'
 import $ from 'jquery'
 export default {
   props: {
@@ -38,11 +37,13 @@ export default {
     }
   },
   methods: {
-    edit(productInfo){
+    editProduct(productInfo){
       console.log(productInfo)
-      this.$emit('edit', productInfo)
+      this.$emit('editProduct', productInfo)
     },
-    ...mapActions(['deleteProduct'])
+    deleteProduct(productInfo){
+      this.$emit('deleteProduct', productInfo)
+    },
   }
 }
 </script>

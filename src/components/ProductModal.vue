@@ -26,10 +26,14 @@
                   <i class="fas fa-spinner fa-spin"></i>
                 </label>
                 <input type="file" id="customFile" class="form-control"
-                  ref="files">
+                  ref="file"
+                  @change="uploadFile"
+                >
               </div>
-              <img img="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=828346ed697837ce808cae68d3ddc3cf&auto=format&fit=crop&w=1350&q=80"
-                class="img-fluid" alt="">
+              <img class="img-fluid"
+                v-if="productData.imageUrl"
+                :src="productData.imageUrl"
+              >
             </div>
             <div class="col-sm-8">
               <div class="form-group">
@@ -137,11 +141,9 @@ export default {
   props: {
     operateType: {
       type: String,
-      validator(string){
-        return ['add', 'edit'].indexOf(string) !== -1
-      }
+      validator: string => ['add', 'edit'].indexOf(string) !== -1
     },
-    propData: {
+    productInfo: {
       type: Object,
       default(){
         return productDataTemplate
@@ -150,7 +152,7 @@ export default {
   },
   data(){
     return {
-      productData: {...this.propData}
+      productData: { ...this.productInfo }
     }
   },
   computed: {
@@ -165,10 +167,32 @@ export default {
   },
   methods: {
     clearData(){
+      this.productData = { ...productDataTemplate }
+    },
+    // 上傳檔案！問題發生點！！！！！！！
+    uploadFile(){
+      const uploadedFile = this.$refs.file.files[0]
+      console.log(uploadedFile)
       
+      const formData = new FormData()
+      formData.append('file-to-upload', uploadedFile)
+      const API = `${process.env.API_PATH}/api/${process.env.CUSTOM_API_PATH}/admin/upload`
+      this.$http.post(API, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+        .then(
+          ({data}) => {
+            if(data.success){
+              this.$set(this.productData, 'imageUrl', data.imageUrl)
+            }
+          }
+        )
     },
     cancel(){
       console.log('取消');
+      // this.clearData()
     },
     confirm(){
       console.log('確定' + this.operateType)
@@ -179,10 +203,10 @@ export default {
         )
     }
   },
-  // 偵聽上層組件若有傳入prop即表示要編輯商品
+  // 偵聽上層組件若有注入prop即表示要編輯商品
   watch: {
-    propData(){
-      this.productData = {...this.propData}
+    productInfo(){
+      this.productData = {...this.productInfo}
     }
   }
 }

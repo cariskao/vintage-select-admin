@@ -24,14 +24,16 @@
           v-for="product in products"
           :key="product.id"
           :productInfo="product"
-          @edit="editProductModal"
+          @editProduct="editProductModal"
+          @deleteProduct="deleteProductModal"
         />
       </tbody>
     </table>
 
     <!-- Modal -->
-    <productModal operateType="add"/>
-    <productModal :propData="tempEditProduct" operateType="edit"/>
+    <ProductModal operateType="add"/>
+    <ProductModal :productInfo="tempEditProduct" operateType="edit"/>
+    <DeleteProductModal :productInfo="tempEditProduct"/>
 
   </div>
 </template>
@@ -41,10 +43,12 @@ import $ from 'jquery'
 import {mapState} from 'vuex'
 import ProductItem from '@/components/ProductItem'
 import ProductModal from '@/components/ProductModal'
+import DeleteProductModal from '@/components/DeleteProductModal'
 export default {
   components: {
     ProductItem,
-    ProductModal
+    ProductModal,
+    DeleteProductModal
   },
   data(){
     return {
@@ -62,6 +66,10 @@ export default {
     editProductModal(data){
       this.tempEditProduct = data
       $('#editProductModal').modal('show')
+    },
+    deleteProductModal(data){
+      this.tempEditProduct = data
+      $('#deleteProductModal').modal('show')
     }
   },
   mounted() {

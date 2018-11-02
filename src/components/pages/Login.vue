@@ -43,6 +43,7 @@ export default {
     }
   },
   methods: {
+    // 登入並無存入 cookie！問題發生點！！！！！！！！！！
     signIn(){
       const API = `${process.env.API_PATH}/admin/signin`
       this.$http.post(API, this.user)
@@ -56,9 +57,6 @@ export default {
           }
         )
     },
-    // signIn(){
-    //   this.$store.dispatch('signIn')
-    // }
   }
 }
 </script>
