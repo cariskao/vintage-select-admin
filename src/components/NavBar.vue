@@ -20,7 +20,7 @@
 import {mapActions} from 'vuex'
 export default {
   methods: {
-    ...mapActions(['logOut'])
+    ...mapActions('member', ['logOut'])
   }
 }
 </script>

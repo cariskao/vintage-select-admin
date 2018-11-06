@@ -16,9 +16,13 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">取消</button>
-          <button type="button" class="btn btn-danger"
+          <button type="button" class="btn"
+            :class="btnClass"
             @click="deleteProduct(productInfo.id)"
-          >確認刪除</button>
+          >
+            確認刪除
+            <v-icon name="spinner" pulse v-if="isLoading"/>
+          </button>
         </div>
       </div>
     </div>
@@ -27,19 +31,34 @@
 
 <script>
 import $ from 'jquery'
-import { mapActions } from 'vuex'
 export default {
   props: {
     productInfo: {
       type: Object
     }
   },
+  data(){
+    return {
+      isLoading: false
+    }
+  },
+  computed: {
+    btnClass(){
+      return {
+        'btn-danger': !this.isLoading,
+        'btn-secondary': this.isLoading,
+        'disabled': this.isLoading
+      }
+    }
+  },
   methods: {
     deleteProduct(id){
-      this.$store.dispatch('deleteProduct', id)
-        .then(
-          () => $('#deleteProductModal').modal('hide')
-        )
+      this.isLoading = true
+      this.$store.dispatch('product/deleteProduct', id)
+        .then(() => {
+          this.isLoading = false
+          $('#deleteProductModal').modal('hide')
+        })
     }
   }
 }

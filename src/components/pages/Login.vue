@@ -27,7 +27,14 @@
           <input type="checkbox" value="remember-me"> Remember me
         </label>
       </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      <button class="btn btn-lg btn-block" type="submit"
+        :class="btnClass"
+      >
+        {{signInLabel}}
+        <v-icon name="spinner" scale="1.2" pulse
+          v-if="isLoading"
+        />
+      </button>
     </form>
   </div>
 </template>
@@ -39,20 +46,38 @@ export default {
       user: {
         username: '',
         password: ''
+      },
+      isLoading: false
+    }
+  },
+  computed: {
+    btnClass(){
+      return {
+        'btn-primary': !this.isLoading,
+        'btn-secondary': this.isLoading,
+        'disabled': this.isLoading
       }
+    },
+    signInLabel(){
+      return this.isLoading === true
+        ? '登入中'
+        : '登入'
     }
   },
   methods: {
-    // 登入並無存入 cookie！問題發生點！！！！！！！！！！
     signIn(){
       const API = `${process.env.API_PATH}/admin/signin`
+      this.isLoading = true
       this.$http.post(API, this.user)
         .then(
           ({data}) => {
             console.log(data)
+            this.isLoading = false
             
             if(data.success){
               this.$router.push('/admin/products')
+            }else{
+              alert('登入失敗！請確認帳號密碼是否有誤')
             }
           }
         )

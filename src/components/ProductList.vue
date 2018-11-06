@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="text-right mt-4">
+    <loading :active.sync="isLoading"/>
+    <div class="mt-4">
       <button
         class="btn btn-primary"
         @click="addProductModal"
@@ -30,6 +31,8 @@
       </tbody>
     </table>
 
+    <Pagination/>
+
     <!-- Modal -->
     <ProductModal operateType="add"/>
     <ProductModal :productInfo="tempEditProduct" operateType="edit"/>
@@ -44,23 +47,27 @@ import {mapState} from 'vuex'
 import ProductItem from '@/components/ProductItem'
 import ProductModal from '@/components/ProductModal'
 import DeleteProductModal from '@/components/DeleteProductModal'
+import Pagination from '@/components/Pagination'
 export default {
   components: {
     ProductItem,
     ProductModal,
-    DeleteProductModal
+    DeleteProductModal,
+    Pagination
   },
   data(){
     return {
-      tempEditProduct: {}
+      tempEditProduct: {},
     }
   },
   computed: {
-    ...mapState(['products'])
+    ...mapState('product' , ['products']),
+    ...mapState('loading', {
+      isLoading: 'isPageLoading'
+    })
   },
   methods: {
     addProductModal(){
-      // $(`#${type}ProductModal`).modal('show')
       $('#addProductModal').modal('show')
     },
     editProductModal(data){
@@ -73,7 +80,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch('getProducts')
+    this.$store.dispatch('product/getProducts')
   },
 }
 </script>

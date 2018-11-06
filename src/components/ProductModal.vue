@@ -23,7 +23,9 @@
               </div>
               <div class="form-group">
                 <label for="customFile">或 上傳圖片
-                  <i class="fas fa-spinner fa-spin"></i>
+                  <v-icon name="spinner" pulse
+                    v-if="isUploadingLoading"
+                  />
                 </label>
                 <input type="file" id="customFile" class="form-control"
                   ref="file"
@@ -111,10 +113,12 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" >取消</button>
-          <button type="button" class="btn btn-primary"
+          <button type="button" class="btn"
+            :class="btnClass"
             @click="confirm"
           >
-            確認
+            <v-icon v-if="isLoading" name="spinner" pulse/>
+            <span v-else>確認</span>
           </button>
         </div>
       </div>
@@ -147,17 +151,26 @@ export default {
       type: Object,
       default(){
         return productDataTemplate
-      } 
+      }
     }
   },
   data(){
     return {
-      productData: { ...this.productInfo }
+      productData: { ...this.productInfo },
+      isLoading: false,
+      isUploadingLoading: false,
     }
   },
   computed: {
     id(){
       return `${this.operateType}ProductModal`
+    },
+    btnClass(){
+      return {
+        'btn-primary': !this.isLoading,
+        'btn-secondary': this.isLoading,
+        'disabled': this.isLoading,
+      }
     },
     modalTitle(){
       return this.operateType === 'add'
@@ -169,8 +182,8 @@ export default {
     clearData(){
       this.productData = { ...productDataTemplate }
     },
-    // 上傳檔案！問題發生點！！！！！！！
     uploadFile(){
+      this.isUploadingLoading = true
       const uploadedFile = this.$refs.file.files[0]
       console.log(uploadedFile)
       
@@ -184,6 +197,7 @@ export default {
       })
         .then(
           ({data}) => {
+            this.isUploadingLoading = false
             if(data.success){
               this.$set(this.productData, 'imageUrl', data.imageUrl)
             }
@@ -196,11 +210,12 @@ export default {
     },
     confirm(){
       console.log('確定' + this.operateType)
-
-      this.$store.dispatch(`${this.operateType}Product`, this.productData)
-        .then(
-          () => $(`#${this.operateType}ProductModal`).modal('hide')
-        )
+      this.isLoading = true
+      this.$store.dispatch(`product/${this.operateType}Product`, this.productData)
+        .then(() => {
+          this.isLoading = false
+          $(`#${this.operateType}ProductModal`).modal('hide')
+        })
     }
   },
   // 偵聽上層組件若有注入prop即表示要編輯商品

@@ -1,13 +1,35 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
+
+import 'bootstrap'
+
+// axios
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import 'bootstrap'
 Vue.use(VueAxios, axios)
-
-// 開啟 axios 請求繫帶cookie
+  // 開啟 axios 請求繫帶cookie
 axios.defaults.withCredentials = true
+// ----------
+
+// vue-loading-overlay
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.css'
+Vue.component('Loading', Loading)
+// ----------
+
+// vue-awesome
+import 'vue-awesome/icons/spinner'
+import Icon from 'vue-awesome/components/Icon'
+Vue.component('v-icon', Icon)
+// ----------
+
+// 價格千分號filter
+import currencyFilter from './filters/currency'
+Vue.filter('currency', currencyFilter)
+
+
+
 
 import App from './App'
 import router from './router/router'

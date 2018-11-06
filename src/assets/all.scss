@@ -3,4 +3,9 @@
 @import '~bootstrap/scss/bootstrap';
 
 
-@import './_dashboard.scss'
+@import './_dashboard.scss';
+
+// 取消多重點擊
+.btn-secondary.disabled {
+  pointer-events: none;
+}
