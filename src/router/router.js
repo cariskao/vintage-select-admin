@@ -3,8 +3,9 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 import Login from '@/components/pages/Login'
-import Admin from '@/components/pages/Admin'
-import ProductList from '@/components/ProductList'
+import Dashboard from '@/components/Dashboard'
+import SimulateOrder from '@/components/pages/SimulateOrder'
+import Products from '@/components/pages/Products'
 
 const router = new Router({
   routes: [
@@ -15,19 +16,29 @@ const router = new Router({
     {
       path: '/admin',
       redirect: '/admin/products',
-      component: Admin,
+      component: Dashboard,
       meta: {
         loginRequired: true
       },
       children: [
         {
           path: 'products',
-          alias: 'productlist',
-          component: ProductList,
+          alias: 'product',
+          component: Products,
           meta: {
             loginRequired: true
           },
         }
+      ]
+    },
+    {
+      path: '/',
+      component: Dashboard,
+      children: [
+        {
+          path: 'simulate_order',
+          component: SimulateOrder,
+        },
       ]
     },
     {

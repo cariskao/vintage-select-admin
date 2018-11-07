@@ -9,10 +9,9 @@
       </h6>
       <ul class="nav flex-column">
         <li class="nav-item">
-          <a class="nav-link active" href="#">
-            <span data-feather="home"></span>
-            Dashboard <span class="sr-only">(current)</span>
-          </a>
+          <router-link class="nav-link active" to="/admin/products">
+            <v-icon name="box-open"/> 產品列表
+          </router-link>
         </li>
       </ul>
 
@@ -24,10 +23,9 @@
       </h6>
       <ul class="nav flex-column mb-2">
         <li class="nav-item">
-          <a class="nav-link" href="#">
-            <span data-feather="file-text"></span>
-            模擬訂單
-          </a>
+          <router-link class="nav-link" to="/simulate_order">
+            <v-icon name="shopping-cart"/> 模擬訂單
+          </router-link>
         </li>
       </ul>
     </div>

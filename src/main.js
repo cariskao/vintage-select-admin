@@ -20,6 +20,8 @@ Vue.component('Loading', Loading)
 
 // vue-awesome
 import 'vue-awesome/icons/spinner'
+import 'vue-awesome/icons/box-open'
+import 'vue-awesome/icons/shopping-cart'
 import Icon from 'vue-awesome/components/Icon'
 Vue.component('v-icon', Icon)
 // ----------
