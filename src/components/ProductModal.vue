@@ -113,13 +113,12 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" >取消</button>
-          <button type="button" class="btn"
-            :class="btnClass"
-            @click="confirm"
-          >
-            <v-icon v-if="isLoading" name="spinner" pulse/>
-            <span v-else>確認</span>
-          </button>
+          <ActionButton
+            colorStyle="primary"
+            btnLabel="確認"
+            :isLoading="isLoading"
+            @click.native="confirm"
+          />
         </div>
       </div>
     </div>
@@ -141,6 +140,7 @@ const productDataTemplate = {
 }
 
 import $ from 'jquery'
+import ActionButton from '@/components/ActionButton'
 export default {
   props: {
     operateType: {
@@ -154,6 +154,9 @@ export default {
       }
     }
   },
+  components: {
+    ActionButton
+  },
   data(){
     return {
       productData: { ...this.productInfo },
@@ -164,13 +167,6 @@ export default {
   computed: {
     id(){
       return `${this.operateType}ProductModal`
-    },
-    btnClass(){
-      return {
-        'btn-primary': !this.isLoading,
-        'btn-secondary': this.isLoading,
-        'disabled': this.isLoading,
-      }
     },
     modalTitle(){
       return this.operateType === 'add'

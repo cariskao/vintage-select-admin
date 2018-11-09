@@ -1,6 +1,6 @@
 <template>
   <div>
-    <loading :active.sync="isLoading"/>
+    <loading :active.sync="isPageLoading"/>
     <div class="mt-4">
       <button
         class="btn btn-primary"
@@ -31,12 +31,16 @@
       </tbody>
     </table>
 
-    <Pagination/>
+    <Pagination
+      v-if="pagination.total_pages > 1"
+      module="product"
+      api="getProducts"
+    />
 
     <!-- Modal -->
     <ProductModal operateType="add"/>
-    <ProductModal :productInfo="tempEditProduct" operateType="edit"/>
-    <DeleteProductModal :productInfo="tempEditProduct"/>
+    <ProductModal :productInfo="tempOperateData" operateType="edit"/>
+    <DeleteProductModal :productInfo="tempOperateData"/>
 
   </div>
 </template>
@@ -57,25 +61,22 @@ export default {
   },
   data(){
     return {
-      tempEditProduct: {},
+      tempOperateData: {},
     }
   },
   computed: {
-    ...mapState('product' , ['products']),
-    ...mapState('loading', {
-      isLoading: 'isPageLoading'
-    })
+    ...mapState('product' , ['products', 'pagination', 'isPageLoading']),
   },
   methods: {
     addProductModal(){
       $('#addProductModal').modal('show')
     },
     editProductModal(data){
-      this.tempEditProduct = data
+      this.tempOperateData = data
       $('#editProductModal').modal('show')
     },
     deleteProductModal(data){
-      this.tempEditProduct = data
+      this.tempOperateData = data
       $('#deleteProductModal').modal('show')
     }
   },

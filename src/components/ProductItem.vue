@@ -7,10 +7,10 @@
     <td :class="enabledColor">{{enabledSpan}}</td>
     <td>
       <button class="btn btn-outline-primary btn-sm"
-        @click="editProduct(productInfo)"
+        @click="editProduct"
       >編輯</button>
       <button class="btn btn-outline-danger btn-sm"
-        @click="deleteProduct(productInfo)"
+        @click="deleteProduct"
       >刪除</button>
     </td>
   </tr>
@@ -37,12 +37,11 @@ export default {
     }
   },
   methods: {
-    editProduct(productInfo){
-      console.log(productInfo)
-      this.$emit('editProduct', productInfo)
+    editProduct(){
+      this.$emit('editProduct', this.productInfo)
     },
-    deleteProduct(productInfo){
-      this.$emit('deleteProduct', productInfo)
+    deleteProduct(){
+      this.$emit('deleteProduct', this.productInfo)
     },
   }
 }

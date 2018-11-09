@@ -39,11 +39,23 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 export default {
+  props: {
+    module: {
+      type: String
+    },
+    api: {
+      type: String
+    }
+  },
   computed: {
-    ...mapState('product', ['pagination']),
+    pagination(){
+      return this.$store.state[this.module].pagination
+    }
   },
   methods: {
-    ...mapActions('product', ['getProducts']),
+    getProducts(page){
+      this.$store.dispatch(`${this.module}/${this.api}`, page)
+    },
     pageActive(page){
       return {
         active: this.pagination.current_page === page

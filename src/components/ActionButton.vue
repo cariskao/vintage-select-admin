@@ -1,16 +1,19 @@
 <template>
   <Button
-    :class="btnclass"
+    :class="btnClass"
   >
-    <v-icon v-if="isLoading" name="spinner" pulse/>
-    <span :class="showLoading">{{btnLabel}}</span>
+    <v-icon class="loading" v-if="isLoading" name="spinner" pulse/>
+    <!-- vue awesome的插槽 -->
+    <span :class="showLoading">
+      <slot/> {{btnLabel}}
+    </span>
   </Button>
 </template>
 
 <script>
 export default {
   props: {
-    btnClass: {
+    colorStyle: {
       type: String
     },
     btnLabel: {
@@ -21,6 +24,14 @@ export default {
     }
   },
   computed: {
+    btnClass(){
+      return {
+        btn: true,
+        [`btn-${this.colorStyle}`]: !this.isLoading,
+        'btn-secondary': this.isLoading,
+        disabled: this.isLoading
+      }
+    },
     showLoading(){
       return {
         transparent: this.isLoading
@@ -35,8 +46,16 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 .transparent {
   opacity: 0;
+}
+.loading {
+  position: absolute;
+  top: auto;
+  left: auto;
+  // transform: translate(-50%, -50%)
+  transform: translateX(50px)
 }
 </style>

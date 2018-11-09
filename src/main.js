@@ -22,6 +22,9 @@ Vue.component('Loading', Loading)
 import 'vue-awesome/icons/spinner'
 import 'vue-awesome/icons/box-open'
 import 'vue-awesome/icons/shopping-cart'
+import 'vue-awesome/icons/money-bill-alt'
+import 'vue-awesome/icons/credit-card'
+import 'vue-awesome/icons/trash-alt'
 import Icon from 'vue-awesome/components/Icon'
 Vue.component('v-icon', Icon)
 // ----------
@@ -50,9 +53,8 @@ new Vue({
 
 // 導航守衛
 router.beforeEach( (to, from, next) => {
-  console.log('to', to)
-  console.log('from', from)
-  console.log('next', next)
+  console.log('導航守衛 to', to)
+  console.log('導航守衛 from', from)
 
   if(to.meta.loginRequired){
     console.log('此頁面需驗證登入')

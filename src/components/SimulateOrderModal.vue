@@ -1,0 +1,107 @@
+<template>
+  <div class="modal fade" id="SimulateOrderModal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content border-0">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title" id="exampleModalLabel">
+            <span>{{productInfo.title}}</span>
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <img class="img-fluid" alt=""
+            :src="productInfo.imageUrl"  
+          >
+          <blockquote class="blockquote mt-3">
+            <p class="mb-0">{{ productInfo.content }}</p>
+            <footer class="blockquote-footer text-right">
+              {{productInfo.description}}
+            </footer>
+          </blockquote>
+
+          <div class="d-flex justify-content-between align-items-baseline">
+            <template v-if="productInfo.price">
+              <del class="h6">原價 {{ productInfo.origin_price }} 元</del>
+              <div class="h4">特價 {{ productInfo.price }} 元</div>
+            </template>
+            <div class="h4" v-else>{{ productInfo.origin_price }} 元</div>
+          </div>
+
+          <select name="" class="form-control" mt-3
+            v-model="qty"
+          >
+            <option
+              v-for="i in 10"
+              :key="i"
+              :value="i"
+            >
+              選購 {{ i }} {{productInfo.unit}}
+            </option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <div class="text-muted text-nowrap mr-3">
+            小計 <strong>{{totalPrice}}</strong> 元
+          </div>
+          <ActionButton
+            colorStyle="primary"
+            btnLabel="加到購物車"
+            :isLoading="isLoading"
+            @click.native="addToCart"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import ActionButton from '@/components/ActionButton'
+export default {
+  props: {
+    productInfo: {
+      type: Object
+    }
+  },
+  components: {
+    ActionButton
+  },
+  data(){
+    return {
+      qty: 1, //quantity
+      isLoading: false
+    }
+  },
+  computed: {
+    totalPrice(){
+      if(this.productInfo.price){
+        return this.productInfo.price * this.qty
+      }else{
+        return this.productInfo.origin_price * this.qty
+      }
+    }
+  },
+  methods: {
+    addToCart(){
+      this.isLoading = true
+      const product = {
+        id: this.productInfo.id,
+        qty: this.qty
+      }
+      this.$store.dispatch('shopping/addToCart', product)
+        .then(() => {
+          this.isLoading = false
+          this.qty = 1
+          this.$emit('closeModal')
+        })
+    }
+  }
+}
+</script>
+
+<style>
+
+</style>

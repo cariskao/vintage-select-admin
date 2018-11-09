@@ -2,10 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 Vue.use(Router)
 
-import Login from '@/components/pages/Login'
 import Dashboard from '@/components/Dashboard'
+import Login from '@/components/pages/Login'
 import SimulateOrder from '@/components/pages/SimulateOrder'
 import Products from '@/components/pages/Products'
+import Coupons from '@/components/pages/Coupons'
 
 const router = new Router({
   routes: [
@@ -27,10 +28,19 @@ const router = new Router({
           component: Products,
           meta: {
             loginRequired: true
-          },
-        }
+          }
+        },
+        {
+          path: 'coupons',
+          alias: 'coupon',
+          component: Coupons,
+          meta: {
+            loginRequired: true
+          }
+        },
       ]
     },
+
     {
       path: '/',
       component: Dashboard,
