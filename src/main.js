@@ -29,11 +29,16 @@ import Icon from 'vue-awesome/components/Icon'
 Vue.component('v-icon', Icon)
 // ----------
 
+// vee-validate
+// 幹林老師照文件調整語言沒用是殺小
+import VeeValidate, {Validator} from 'vee-validate'
+import zhTW from 'vee-validate/dist/locale/zh_TW'
+Validator.localize('zh_TW', zhTW)
+Vue.use(VeeValidate)
+
 // 價格千分號filter
 import currencyFilter from './filters/currency'
 Vue.filter('currency', currencyFilter)
-
-
 
 
 import App from './App'
@@ -59,25 +64,19 @@ router.beforeEach( (to, from, next) => {
   if(to.meta.loginRequired){
     console.log('此頁面需驗證登入')
 
-    const API = `${process.env.API_PATH}/api/user/check`
-    axios.post(API)
+    store.dispatch('adminUser/checkAdminUser')
       .then(
-        ({data}) => {
-          if(data.success){
-            next()
-          }else{
-            alert('錯誤！請重新登入')
-            next({
-              path: '/login'
-            })
-          }
+        () => {
+          next()
+        },
+        (errorMessage) => {
+          alert(errorMessage)
+          next({
+            path: '/login'
+          })
         }
       )
-      .catch(e => {
-        console.error(e)
-      })
   }else{
     next()
   }
-  
 })

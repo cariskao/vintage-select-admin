@@ -24,6 +24,10 @@
       v-if="cart.carts.length > 0"
     />
 
+    <SimulateOrderForm
+      v-if="cart.carts.length > 0"
+    />
+
     <SimulateOrderModal 
       :productInfo="product"
       @closeModal="closeModal"

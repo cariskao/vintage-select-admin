@@ -1,13 +1,13 @@
 <template>
-  <div>
-    <form class="form-signin" @submit.prevent="signIn">
-      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-      <label for="inputEmail" class="sr-only">Email address</label>
+  <div class="wrapper">
+    <form class="form-signin" @submit.prevent="signIn(user)">
+      <h1 class="h3 mb-3 font-weight-normal text-center">管理員登入</h1>
+      <label for="inputEmail" class="sr-only">Email</label>
       <input
         type="email"
         id="inputEmail"
         class="form-control"
-        placeholder="Email address"
+        placeholder="請輸入使用者email"
         required
         autofocus
         v-model="user.username"
@@ -18,16 +18,11 @@
         type="password"
         id="inputPassword"
         class="form-control"
-        placeholder="Password"
+        placeholder="請輸入密碼"
         required
         v-model="user.password"
       >
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
-      </div>
-      <button class="btn btn-lg btn-block" type="submit"
+      <button class="btn btn-lg btn-block mt-4" type="submit"
         :class="btnClass"
       >
         {{signInLabel}}
@@ -40,17 +35,24 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
+import ActionButton from '@/components/ActionButton'
 export default {
+  components: {
+    ActionButton
+  },
   data(){
     return {
       user: {
         username: '',
         password: ''
-      },
-      isLoading: false
+      }
     }
   },
   computed: {
+    ...mapState('adminUser', {
+      isLoading: 'isSignInLoading'
+    }),
     btnClass(){
       return {
         'btn-primary': !this.isLoading,
@@ -65,28 +67,18 @@ export default {
     }
   },
   methods: {
-    signIn(){
-      const API = `${process.env.API_PATH}/admin/signin`
-      this.isLoading = true
-      this.$http.post(API, this.user)
-        .then(
-          ({data}) => {
-            console.log(data)
-            this.isLoading = false
-            
-            if(data.success){
-              this.$router.push('/admin/products')
-            }else{
-              alert('登入失敗！請確認帳號密碼是否有誤')
-            }
-          }
-        )
-    },
+    ...mapActions('adminUser', ['signIn'])
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.wrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .form-signin {
   width: 100%;
   max-width: 400px;

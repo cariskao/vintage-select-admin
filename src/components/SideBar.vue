@@ -27,8 +27,8 @@
         <li class="nav-item">
           <!-- 這邊order會重複match到simulate_order，要修改！！！！！ -->
           <router-link class="nav-link"
-            :class="activeClass('order')"
-            to="/admin"
+            :class="activeClass('orders')"
+            to="/admin/orders"
           >
             <v-icon name="credit-card"/> 訂單
           </router-link>
@@ -60,7 +60,7 @@ export default {
   methods: {
     activeClass(page){
       const data = this.$route.path.split('/')
-      
+
       return {
         active: data.indexOf(page) > -1
       }

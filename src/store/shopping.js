@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from '../router/router'
 
 export default {
   namespaced: true,
@@ -8,6 +9,10 @@ export default {
     pagination: {},
     cart: {
       carts: []
+    },
+    checkoutOrder: {
+      user: {},
+      products: []
     },
     isPageLoading: false
   },
@@ -23,6 +28,9 @@ export default {
     },
     setCart(state, cart){
       state.cart = cart
+    },
+    setCheckoutOrder(state, order){
+      state.checkoutOrder = order
     },
     setPageLoading(state, boolean){
       state.isPageLoading = boolean
@@ -47,6 +55,7 @@ export default {
       const API = `
         ${process.env.API_PATH}/api/${process.env.CUSTOM_API_PATH}/product/${id}
       `
+      // 因為可能產品未啟用所以才這樣寫
       return new Promise((resolve, reject) => {
         axios.get(API)
           .then( ({data}) => {
@@ -138,6 +147,57 @@ export default {
           if(data.success){
             dispatch('getCart')
           }
+        })
+    },
+    createOrder({commit, dispatch}, order){
+      const API = `
+        ${process.env.API_PATH}/api/${process.env.CUSTOM_API_PATH}/order
+      `
+      commit('setPageLoading', true)
+      return axios.post(API, {data: order} )
+        .then( ({data}) => {
+          console.log(data)
+
+          commit('setPageLoading', false)
+
+          dispatch('alert/updateMessage', {
+            message: data.message,
+            status: data.success === true
+              ? 'success'
+              : 'danger'
+          }, { root: true})
+
+          if(data.success){
+            router.push(`/simulate_order/${data.orderId}`)
+          }
+        })
+    },
+    getOrder({commit}, orderId){
+      const API = `
+        ${process.env.API_PATH}/api/${process.env.CUSTOM_API_PATH}/order/${orderId}
+      `
+      commit('setPageLoading', true)
+      axios.get(API)
+        .then( ({data}) => {
+          console.log(data)
+
+          commit('setCheckoutOrder', data.order)
+          commit('setPageLoading', false)
+        })
+    },
+    payOrder({commit, dispatch}, orderId){
+      const API = `
+        ${process.env.API_PATH}/api/${process.env.CUSTOM_API_PATH}/pay/${orderId}
+      `
+      commit('setPageLoading', true)
+      axios.post(API)
+        .then( ({data}) => {
+          console.log(data)
+
+          if(data.success){
+            dispatch('getOrder', orderId)
+          }
+          commit('setPageLoading', false)
         })
     }
   }

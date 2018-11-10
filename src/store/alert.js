@@ -19,7 +19,6 @@ export default {
         status,
         timestamp
       })
-      // this.removeMessageWithTiming(timestamp);
       dispatch('removeMessageWithTiming', timestamp)
     },
     removeMessageWithTiming({state, commit}, timestamp) {

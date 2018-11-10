@@ -21,33 +21,28 @@
         <tfoot>
           <tr>
             <td colspan="3" class="text-right">總計</td>
-            <td class="text-right">{{ cart.total }}</td>
+            <td class="text-right">{{ cart.total | currency }}</td>
           </tr>
           <tr
             v-if="cart.total !== cart.final_total"
           >
             <td colspan="3" class="text-right text-success">折扣價</td>
-            <td class="text-right text-success">{{ cart.final_total }}</td>
+            <td class="text-right text-success">{{ cart.final_total | currency }}</td>
           </tr>
         </tfoot>
       </table>
       <div class="input-group mb-3 input-group-sm">
         <input type="text" class="form-control" placeholder="請輸入優惠碼"
           v-model.trim="couponCode"
+          @keydown.enter="useCoupon"
         >
         <div class="input-group-append">
-
-          <!-- <button class="btn btn-outline-secondary" type="button">
-            套用優惠碼
-          </button> -->
-
           <ActionButton
             colorStyle="outline-secondary"
+            btnLabel="套用優惠碼"
             :isLoading="isUseCouponLoading"
             @click.native="useCoupon"
-          >
-            套用優惠碼
-          </ActionButton>
+          />
         </div>
       </div>
     </div>
