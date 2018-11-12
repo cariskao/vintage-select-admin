@@ -38,6 +38,10 @@ export default {
           }
           commit('setPageLoading', false)
         })
+        .catch(err => {
+          console.error(err)
+          commit('setPageLoading', false)
+        })
     },
     addProduct({dispatch}, product){
       const API = `
@@ -53,10 +57,10 @@ export default {
               : 'danger'
           }, { root: true})
 
-          console.log('in vuex', data)
+          console.log(data)
           dispatch('getProducts')
         })
-        .catch(e => console.error(e))
+        .catch(err => console.error(err))
     },
     editProduct({dispatch}, product){
       const API = `
@@ -73,11 +77,11 @@ export default {
           }, { root: true})
 
           if(data.success){
-            console.log('in vuex', data)
+            console.log(data)
             dispatch('getProducts')
           }
         })
-        .catch(e => console.error(e))
+        .catch(err => console.error(err))
     },
     deleteProduct({dispatch}, productId){
       const API = `
@@ -94,13 +98,13 @@ export default {
           }, { root: true})
 
           if(data.success){
-            console.log('in vuex', data)
+            console.log(data)
             dispatch('getProducts')
           }else{
-            console.log('in vuex', data.message)
+            console.log(data.message)
           }
         })
-        .catch(e => console.error(e))
+        .catch(err => console.error(err))
     },
   }
 }

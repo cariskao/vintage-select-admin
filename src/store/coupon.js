@@ -38,6 +38,10 @@ export default {
           }
           commit('setPageLoading', false)
         })
+        .catch(err => {
+          console.error(err)
+          commit('setPageLoading', false)
+        })
     },
     addCoupon({dispatch}, coupon){
       const API = `
@@ -49,6 +53,7 @@ export default {
 
           dispatch('getCoupons')
         })
+        .catch(err => console.error(err))
     },
     editCoupon({dispatch}, coupon){
       const API = `
@@ -67,7 +72,7 @@ export default {
 
           dispatch('getCoupons')
         })
-
+        .catch(err => console.error(err))
     },
     deleteCoupon({dispatch}, id){
       const API = `
@@ -86,6 +91,7 @@ export default {
 
           dispatch('getCoupons')
         })
+        .catch(err => console.error(err))
     }
   }
 }

@@ -7,14 +7,14 @@ export default {
     products: [],
     product:{},
     pagination: {},
+    isPageLoading: false,
     cart: {
       carts: []
     },
     checkoutOrder: {
       user: {},
       products: []
-    },
-    isPageLoading: false
+    }
   },
   getters: {
     enabledProducts(state){
@@ -55,12 +55,17 @@ export default {
           commit('setPagination', data.pagination)
           commit('setPageLoading', false)
         })
+        .catch(err => {
+          console.error(err)
+          commit('setPageLoading', false)
+        })
     },
     getProduct({commit, dispatch}, id){
       const API = `
         ${process.env.API_PATH}/api/${process.env.CUSTOM_API_PATH}/product/${id}
       `
       // 因為可能產品未啟用所以才這樣寫
+      // 彈窗在觸發在page組件，用promise處理是否開啟彈窗
       return new Promise((resolve, reject) => {
         axios.get(API)
           .then( ({data}) => {
@@ -76,6 +81,7 @@ export default {
               reject(data.message)
             }
           })
+          .catch(err => reject(err))
       })
     },
     addToCart({dispatch}, {id, qty = 1}){
@@ -100,6 +106,7 @@ export default {
 
           dispatch('getCart')
         })
+        .catch(err => console.error(err))
     },
     getCart({commit}){
       const API = `
@@ -110,6 +117,10 @@ export default {
         .then( ({data}) => {
           console.log('購物車資訊', data.data)
           commit('setCart', data.data)
+          commit('setPageLoading', false)
+        })
+        .catch(err => {
+          console.error(err)
           commit('setPageLoading', false)
         })
     },
@@ -129,6 +140,7 @@ export default {
 
           dispatch('getCart')
         })
+        .catch(err => console.error(err))
     },
     useCoupon({dispatch}, couponCode){
       const API = `
@@ -153,6 +165,7 @@ export default {
             dispatch('getCart')
           }
         })
+        .catch(err => console.error(err))
     },
     createOrder({commit, dispatch}, order){
       const API = `
@@ -176,6 +189,7 @@ export default {
             router.push(`/simulate_order/${data.orderId}`)
           }
         })
+        .catch(err => console.error(err))
     },
     getOrder({commit}, orderId){
       const API = `
@@ -187,6 +201,10 @@ export default {
           console.log(data)
 
           commit('setCheckoutOrder', data.order)
+          commit('setPageLoading', false)
+        })
+        .catch(err => {
+          console.error(err)
           commit('setPageLoading', false)
         })
     },
@@ -202,6 +220,10 @@ export default {
           if(data.success){
             dispatch('getOrder', orderId)
           }
+          commit('setPageLoading', false)
+        })
+        .catch(err => {
+          console.error(err)
           commit('setPageLoading', false)
         })
     }

@@ -38,6 +38,10 @@ export default {
           }
           commit('setPageLoading', false)
         })
+        .catch((err) => {
+          console.error(err)
+          commit('setPageLoading', false)
+        })
     }
   }
 }

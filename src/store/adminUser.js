@@ -28,12 +28,16 @@ export default {
           }
           commit('setSignInLoading', false)
         })
+        .catch(err => {
+          console.error(err)
+          commit('setSignInLoading', false)
+        })
     },
     logOut(){
       const API = `
         ${process.env.API_PATH}/logout
       `
-      axios.post(API)
+      return axios.post(API)
         .then( ({data}) => {
           console.log('logOut', data);
           
@@ -41,6 +45,7 @@ export default {
             router.push('/login')
           }
         })
+        .catch(err => console.error(err))
     },
     checkAdminUser(){
       const API = `
@@ -55,6 +60,7 @@ export default {
               reject('驗證失敗！請重新登入！')
             }
           })
+          .catch(err => reject(err))
       })
     }
   }
