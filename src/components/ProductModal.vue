@@ -5,7 +5,7 @@
       <div class="modal-content border-0">
         <div class="modal-header bg-dark text-white">
           <h5 class="modal-title" id="exampleModalLabel">
-            <span>{{modalTitle}}</span>
+            <span>{{ modalTitle }}</span>
           </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -14,6 +14,13 @@
         <div class="modal-body">
           <div class="row">
             <div class="col-sm-4">
+              <div class="form-group">
+                <label for="title">名稱</label>
+                <input type="text" class="form-control" id="title"
+                  placeholder="請輸入商品名稱"
+                  v-model="productData.title"
+                >
+              </div>
               <div class="form-group">
                 <label for="image">輸入圖片網址</label>
                 <input type="text" class="form-control" id="image"
@@ -38,20 +45,42 @@
               >
             </div>
             <div class="col-sm-8">
-              <div class="form-group">
-                <label for="title">標題</label>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                <label for="title">品牌</label>
                 <input type="text" class="form-control" id="title"
-                  placeholder="請輸入標題"
-                  v-model="productData.title"
+                  placeholder="請輸入品牌"
+                  v-model="productData.category.brand"
                 >
               </div>
-
+                <div class="form-group col-md-6">
+                  <label for="size">數量</label>
+                  <!-- <div class="btn-group" role="group" aria-label="First group">
+                    <button type="button"
+                      :class="sizeTypeButtonClass('clothing')"
+                      @click="setSizeType('clothing')"
+                    >服飾</button>
+                    <button type="button"
+                      :class="sizeTypeButtonClass('accessory')"
+                      @click="setSizeType('accessory')"
+                    >飾品</button>
+                    <button type="button"
+                      :class="sizeTypeButtonClass('shoes')"
+                      @click="setSizeType('shoes')"
+                    >鞋款</button>
+                  </div> -->
+                  <input type="number" class="form-control" id="size"
+                    placeholder="請輸入商品尺寸"
+                    v-model.number="productData.amount"
+                  >
+                </div>
+              </div>
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="category">分類</label>
                   <input type="text" class="form-control" id="category"
                     placeholder="請輸入分類"
-                    v-model="productData.category"
+                    v-model="productData.category.class"
                   >
                 </div>
                 <div class="form-group col-md-6">
@@ -89,9 +118,9 @@
                 ></textarea>
               </div>
               <div class="form-group">
-                <label for="content">說明內容</label>
+                <label for="content">商品備註</label>
                 <textarea type="text" class="form-control" id="content"
-                  placeholder="請輸入產品說明內容"
+                  placeholder="請輸入商品備註"
                   v-model="productData.content"
                 ></textarea>
               </div>
@@ -112,7 +141,9 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" >取消</button>
+          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+            @click="clearData"
+          >取消</button>
           <ActionButton
             colorStyle="primary"
             btnLabel="確認"
@@ -126,12 +157,18 @@
 </template>
 
 <script>
+// 由於要做服飾購物， 這邊category 裝物件來決定品牌與類型(上衣、褲子)，並多裝size決定尺寸
+// 購物頁面前端再次過濾同名商品，集合成單一物件提供尺寸表陣列選擇尺寸
 const productDataTemplate = {
   title: '',
-  category: '',
+  category: {
+    brand: '',
+    class: ''
+  },
   origin_price: 0,
   price: 0,
-  unit: '',
+  amount: 1,
+  unit: '件',
   image: '',
   description: '',
   content: '',
@@ -140,6 +177,7 @@ const productDataTemplate = {
 }
 
 import $ from 'jquery'
+import cloneDeep from 'lodash/clonedeep'
 import ActionButton from '@/components/ActionButton'
 export default {
   props: {
@@ -159,7 +197,7 @@ export default {
   },
   data(){
     return {
-      productData: { ...this.productInfo },
+      productData: cloneDeep(this.productInfo),
       isLoading: false,
       isUploadingLoading: false,
     }
@@ -176,7 +214,7 @@ export default {
   },
   methods: {
     clearData(){
-      this.productData = { ...productDataTemplate }
+      this.productData = cloneDeep(productDataTemplate)
     },
     uploadFile(){
       this.isUploadingLoading = true
@@ -191,38 +229,58 @@ export default {
           'Content-Type': 'multipart/form-data'
         }
       })
-        .then(
-          ({data}) => {
-            this.isUploadingLoading = false
-            if(data.success){
-              this.$set(this.productData, 'imageUrl', data.imageUrl)
-            }
+        .then( ({data}) => {
+          this.isUploadingLoading = false
+          if(data.success){
+            this.$set(this.productData, 'imageUrl', data.imageUrl)
           }
-        )
-    },
-    cancel(){
-      console.log('取消');
-      // this.clearData()
+        })
+        .catch( (err) => {
+          this.isUploadingLoading = false
+          console.error(err)
+        })
     },
     confirm(){
       console.log('確定' + this.operateType)
+
       this.isLoading = true
       this.$store.dispatch(`product/${this.operateType}Product`, this.productData)
         .then(() => {
           this.isLoading = false
+          this.clearData()
           $(`#${this.operateType}ProductModal`).modal('hide')
         })
+    },
+    sizeTypeButtonClass(type){
+      return {
+        btn: true,
+        'btn-outline-secondary': this.productData.size !== type,
+        'btn-secondary': this.productData.size === type
+      }
+    },
+    setSizeType(type){
+      this.productData.size = type
     }
   },
   // 偵聽上層組件若有注入prop即表示要編輯商品
   watch: {
     productInfo(){
-      this.productData = {...this.productInfo}
+      this.productData = cloneDeep(this.productInfo)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
+.btn-group {
+  display: flex;
+  .btn {
+    flex: 1
+  }
+}
+.btn-group-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 </style>

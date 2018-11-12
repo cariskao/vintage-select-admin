@@ -6,10 +6,9 @@
       >
       </div>
       <div class="card-body">
-        <span class="badge badge-secondary float-right ml-2">{{ productInfo.category }}</span>
-        <h5 class="card-title">
-          <a href="#" class="text-dark">{{ productInfo.title }}</a>
-        </h5>
+        <h6 class="font-italic">{{ productInfo.category.brand }}</h6>
+        <span class="badge badge-secondary float-right ml-2">{{ productInfo.category.class }}</span>
+        <h5 class="card-title">{{ productInfo.title }}</h5>
         <p class="card-text">{{ productInfo.content }}</p>
         <div class="d-flex justify-content-between align-items-baseline">
           <del class="h6">原價 {{ productInfo.origin_price }} 元</del>
@@ -83,7 +82,7 @@ export default {
 
 <style lang="scss" scoped>
 .image {
-  height: 150px;
+  height: 350px;
   background-position: center center;
   background-size: cover;
 }

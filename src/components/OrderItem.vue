@@ -14,8 +14,8 @@
     <td :class="paidColor">{{ paidSpan }}</td>
     <td>
       <button class="btn btn-outline-primary btn-sm"
-        @click="editOrder"
-      >修改</button>
+        @click="showOrder"
+      >查看</button>
     </td>
   </tr>
 </template>
@@ -44,8 +44,8 @@ export default {
     }
   },
   methods: {
-    editOrder(){
-
+    showOrder(){
+      this.$emit('showOrder', this.orderInfo)
     }
   }
 }

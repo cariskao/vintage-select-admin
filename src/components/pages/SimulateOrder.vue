@@ -3,7 +3,7 @@
     <loading :active.sync="isPageLoading"/>
     <div class="row mt-4">
       <SimulateOrderItem
-        v-for="product in products"
+        v-for="product in enabledProducts"
         :key="product.id"
         :productInfo="product"
         @checkDetail="checkDetail"
@@ -37,7 +37,7 @@
 
 <script>
 import $ from 'jquery'
-import { mapState, mapActions} from 'vuex'
+import { mapState, mapActions, mapGetters} from 'vuex'
 import SimulateOrderItem from '@/components/SimulateOrderItem'
 import SimulateOrderModal from '@/components/SimulateOrderModal'
 import SimulateOrderCart from '@/components/SimulateOrderCart'
@@ -53,12 +53,12 @@ export default {
   },
   computed: {
     ...mapState('shopping', [
-      'products',
       'product',
       'pagination',
       'cart',
       'isPageLoading'
     ]),
+    ...mapGetters('shopping', ['enabledProducts'])
   },
   methods: {
     ...mapActions('shopping', ['getProducts', 'getCart']),

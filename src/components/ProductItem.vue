@@ -1,10 +1,12 @@
 <template>
   <tr>
-    <td>{{productInfo.category}}</td>
-    <td>{{productInfo.title}}</td>
-    <td class="text-right">{{productInfo.origin_price | currency}}</td>
-    <td class="text-right">{{productInfo.price | currency}}</td>
-    <td :class="enabledColor">{{enabledSpan}}</td>
+    <td>{{ productInfo.category.brand }}</td>
+    <td>{{ productInfo.category.class }}</td>
+    <td>{{ productInfo.title }}</td>
+    <td>{{ productInfo.amount }}</td>
+    <td class="text-right">{{ productInfo.origin_price | currency }}</td>
+    <td class="text-right">{{ productInfo.price | currency }}</td>
+    <td :class="enabledColor">{{ enabledSpan }}</td>
     <td>
       <button class="btn btn-outline-primary btn-sm"
         @click="editProduct"

@@ -12,8 +12,10 @@
     <table class="table mt-4">
       <thead>
         <tr>
-          <th width="120">分類</th>
+          <th width="120">品牌</th>
+          <th width="100">類型</th>
           <th>產品名稱</th>
+          <th width="60">數量</th>
           <th width="80">原價</th>
           <th width="80">售價</th>
           <th width="100">是否啟用</th>
@@ -47,7 +49,7 @@
 
 <script>
 import $ from 'jquery'
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 import ProductItem from '@/components/ProductItem'
 import ProductModal from '@/components/ProductModal'
 import DeleteProductModal from '@/components/DeleteProductModal'
@@ -61,7 +63,12 @@ export default {
   },
   data(){
     return {
-      tempOperateData: {},
+      tempOperateData: {
+        category: {
+          brand: '',
+          class: ''
+        }
+      },
     }
   },
   computed: {
@@ -72,7 +79,8 @@ export default {
       $('#addProductModal').modal('show')
     },
     editProductModal(data){
-      this.tempOperateData = data
+      // 修改物件參考，否則不會觸發modal內的watch
+      this.tempOperateData = { ...data }
       $('#editProductModal').modal('show')
     },
     deleteProductModal(data){

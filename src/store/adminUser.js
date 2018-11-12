@@ -17,7 +17,7 @@ export default {
         ${process.env.API_PATH}/admin/signin
       `
       commit('setSignInLoading', true)
-      return axios.post(API, user)
+      axios.post(API, user)
         .then( ({data}) => {
           console.log('sign in', data)
 
@@ -52,7 +52,7 @@ export default {
             if(data.success){
               resolve('驗證成功')
             }else{
-              reject('錯誤！請重新登入')
+              reject('驗證失敗！請重新登入！')
             }
           })
       })

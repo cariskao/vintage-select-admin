@@ -16,6 +16,11 @@ export default {
     },
     isPageLoading: false
   },
+  getters: {
+    enabledProducts(state){
+      return state.products.filter( ({is_enabled}) => is_enabled === 1)
+    }
+  },
   mutations: {
     setProduct(state, data){
       state.product = data
@@ -44,7 +49,7 @@ export default {
       commit('setPageLoading', true)
       axios.get(API)
         .then( ({data}) => {
-          console.log(data)        
+          console.log('getProducts', data)        
 
           commit('setProducts', data.products)
           commit('setPagination', data.pagination)

@@ -10,7 +10,7 @@
           <th>購買品項</th>
           <th width="80">應付金額</th>
           <th width="100">是否付款</th>
-          <th width="50">修改</th>
+          <th width="50">查看</th>
         </tr>
       </thead>
       <tbody>
@@ -18,7 +18,7 @@
           v-for="order in orders"
           :key="order.id"
           :orderInfo="order"
-          @editOrder="editOrderModal"
+          @showOrder="showOrderModal"
         />
       </tbody>
     </table>
@@ -29,17 +29,31 @@
       api="getOrders"
     />
 
+    <OrderModal
+      :orderInfo="tempOperateData"
+    />
   </div>
 </template>
 
 <script>
+import $ from 'jquery'
 import { mapState, mapActions } from 'vuex'
 import OrderItem from '@/components/OrderItem'
+import OrderModal from '@/components/OrderModal'
 import Pagination from '@/components/Pagination'
 export default {
   components: {
     OrderItem,
+    OrderModal,
     Pagination
+  },
+  data(){
+    return {
+      tempOperateData: {
+        user: {},
+        products: []
+      }
+    }
   },
   computed: {
     ...mapState('order', [
@@ -50,8 +64,9 @@ export default {
   },
   methods: {
     ...mapActions('order', ['getOrders']),
-    editOrderModal(){
-
+    showOrderModal(data){
+      this.tempOperateData = data
+      $('#orderMoadl').modal('show')
     }
   },
   mounted() {

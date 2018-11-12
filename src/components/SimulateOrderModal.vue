@@ -29,18 +29,21 @@
             </template>
             <div class="h4" v-else>{{ productInfo.origin_price }} 元</div>
           </div>
-
-          <select name="" class="form-control" mt-3
-            v-model="qty"
-          >
-            <option
-              v-for="i in 10"
-              :key="i"
-              :value="i"
+            
+          <div>
+            <select name="" class="form-control" mt-3
+              v-model="qty"
             >
-              選購 {{ i }} {{productInfo.unit}}
-            </option>
-          </select>
+              <option
+                v-for="i in productInfo.amount"
+                :key="i"
+                :value="i"
+              >
+                選購 {{ i }} {{productInfo.unit}}
+              </option>
+            </select>
+          </div>
+          
         </div>
         <div class="modal-footer">
           <div class="text-muted text-nowrap mr-3">
@@ -71,6 +74,7 @@ export default {
   },
   data(){
     return {
+      size: '',
       qty: 1, //quantity
       isLoading: false
     }
@@ -82,14 +86,22 @@ export default {
       }else{
         return this.productInfo.origin_price * this.qty
       }
-    }
+    },
   },
   methods: {
     addToCart(){
+      // if(!this.size){
+      //   this.$store.dispatch('alert/updateMessage', {
+      //     message: '請選擇尺寸！',
+      //     status: 'danger'
+      //   })
+      //   return
+      // }
+
       this.isLoading = true
       const product = {
         id: this.productInfo.id,
-        qty: this.qty
+        qty: this.qty,        
       }
       this.$store.dispatch('shopping/addToCart', product)
         .then(() => {
