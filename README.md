@@ -1,6 +1,9 @@
 # vue-final
 
 > hexschool vue final homework
+> vintage select 古著選物管理員後台
+> 請搭配前台做服用
+> 個人練習作品，無商業用途
 
 ## Build Setup
 
