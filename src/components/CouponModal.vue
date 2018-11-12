@@ -31,7 +31,7 @@
             <label for="category">代碼</label>
             <input type="text" class="form-control" id="category"
               placeholder="請輸入優惠券代碼"
-              v-model="couponData.code"
+              v-model.trim="couponData.code"
             >
           </div>
           <div class="form-group">
@@ -60,7 +60,9 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" >取消</button>
+          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+            @click="clearData"
+          >取消</button>
           <ActionButton
             colorStyle="primary"
             btnLabel="確認"
@@ -124,7 +126,7 @@ export default {
     },
     cancel(){
       console.log('取消');
-      // this.clearData()
+      this.clearData()
     },
     confirm(){
       console.log('確定' + this.operateType)
@@ -138,6 +140,7 @@ export default {
         .then(() => {
           this.isLoading = false
           $(`#${this.operateType}CouponModal`).modal('hide')
+          this.clearData()
         })
     }
   },
