@@ -37,7 +37,7 @@
     />
 
     <!-- Modal -->
-    <CouponModal operateType="add"/>
+    <CouponModal :couponInfo="tempOperateData" operateType="add"/>
     <CouponModal :couponInfo="tempOperateData" operateType="edit"/>
     <DeleteCouponModal :couponInfo="tempOperateData"/>
 
@@ -69,10 +69,13 @@ export default {
   methods: {
     ...mapActions('coupon', ['getCoupons']),
     addCoupon(){
+      // 修改物件參考，否則不會觸發modal內的watch
+      this.tempOperateData = { ...this.$store.state.coupon.couponTemplate }
       $('#addCouponModal').modal('show')
     },
     editCouponModal(couponInfo){
-      this.tempOperateData = couponInfo
+      // 修改物件參考，否則不會觸發modal內的watch
+      this.tempOperateData = { ...couponInfo }
       $('#editCouponModal').modal('show')
     },
     deleteCouponModal(couponInfo){

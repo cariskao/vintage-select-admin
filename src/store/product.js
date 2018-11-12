@@ -5,7 +5,23 @@ export default {
   state: {
     products: [],
     pagination: {},
-    isPageLoading: false
+    isPageLoading: false,
+    productTemplate: {   // 商品模板，在組件中展開取用
+      title: '',
+      category: {
+        brand: '',
+        type: ''
+      },
+      origin_price: 0,
+      price: 0,
+      amount: 1,
+      unit: '件',
+      image: '',
+      description: '',
+      content: '',
+      is_enabled: 0,
+      imageUrl: ''
+    }
   },
   mutations: {
     setProducts(state, data){

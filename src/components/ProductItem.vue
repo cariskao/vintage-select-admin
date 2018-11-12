@@ -1,8 +1,8 @@
 <template>
   <tr>
     <td>{{ productInfo.category.brand }}</td>
-    <td>{{ productInfo.category.class }}</td>
     <td>{{ productInfo.title }}</td>
+    <td>{{ productInfo.category.type }}</td>
     <td>{{ productInfo.amount }}</td>
     <td class="text-right">{{ productInfo.origin_price | currency }}</td>
     <td class="text-right">{{ productInfo.price | currency }}</td>

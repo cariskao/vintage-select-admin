@@ -7,12 +7,15 @@
       </div>
       <div class="card-body">
         <h6 class="font-italic">{{ productInfo.category.brand }}</h6>
-        <span class="badge badge-secondary float-right ml-2">{{ productInfo.category.class }}</span>
+        <span class="badge badge-secondary float-right ml-2">{{ productInfo.category.type }}</span>
         <h5 class="card-title">{{ productInfo.title }}</h5>
-        <p class="card-text">{{ productInfo.content }}</p>
+        <p class="card-text">{{ productInfo.description }}</p>
         <div class="d-flex justify-content-between align-items-baseline">
-          <del class="h6">原價 {{ productInfo.origin_price }} 元</del>
-          <div class="h5">特價 {{ productInfo.price }} 元</div>
+          <del class="h6" v-if="isSale">{{ productInfo.origin_price | currency}}</del>
+          <div class="h5">
+            <span class="font-italic" v-if="isSale">sale</span>
+            {{ productInfo.price | currency }}
+          </div>
         </div>
       </div>
       <div class="card-footer d-flex">
@@ -75,6 +78,11 @@ export default {
       return {
         backgroundImage: `url('${url}')`
       }
+    }
+  },
+  computed: {
+    isSale(){
+      return this.productInfo.origin_price !== this.productInfo.price
     }
   }
 }

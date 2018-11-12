@@ -13,8 +13,8 @@
       <thead>
         <tr>
           <th width="120">品牌</th>
-          <th width="100">類型</th>
           <th>產品名稱</th>
+          <th width="100">類型</th>
           <th width="60">數量</th>
           <th width="80">原價</th>
           <th width="80">售價</th>
@@ -40,7 +40,7 @@
     />
 
     <!-- Modal -->
-    <ProductModal operateType="add"/>
+    <ProductModal :productInfo="tempOperateData" operateType="add"/>
     <ProductModal :productInfo="tempOperateData" operateType="edit"/>
     <DeleteProductModal :productInfo="tempOperateData"/>
 
@@ -66,7 +66,7 @@ export default {
       tempOperateData: {
         category: {
           brand: '',
-          class: ''
+          type: ''
         }
       },
     }
@@ -76,6 +76,8 @@ export default {
   },
   methods: {
     addProductModal(){
+      // 修改物件參考，否則不會觸發modal內的watch
+      this.tempOperateData = { ...this.$store.state.product.productTemplate }
       $('#addProductModal').modal('show')
     },
     editProductModal(data){

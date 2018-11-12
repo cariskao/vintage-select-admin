@@ -15,17 +15,23 @@
           <img class="img-fluid" alt=""
             :src="productInfo.imageUrl"  
           >
+          <h3 class="mt-4 font-italic">{{ productInfo.category.brand }}</h3>
+          <hr>
           <blockquote class="blockquote mt-3">
-            <p class="mb-0">{{ productInfo.content }}</p>
-            <footer class="blockquote-footer text-right">
-              {{productInfo.description}}
+            <p class="mb-0">{{ productInfo.description }}</p>
+            <footer class="blockquote-footer text-right mt-2">
+              <pre class="pre">
+                {{productInfo.content}}
+              </pre>
             </footer>
           </blockquote>
 
           <div class="d-flex justify-content-between align-items-baseline">
             <template v-if="productInfo.price">
-              <del class="h6">原價 {{ productInfo.origin_price }} 元</del>
-              <div class="h4">特價 {{ productInfo.price }} 元</div>
+              <del class="h6">{{ productInfo.origin_price | currency }}</del>
+              <div class="h4">
+                <span class="font-italic">sale</span> {{ productInfo.price | currency }}
+              </div>
             </template>
             <div class="h4" v-else>{{ productInfo.origin_price }} 元</div>
           </div>
@@ -90,14 +96,6 @@ export default {
   },
   methods: {
     addToCart(){
-      // if(!this.size){
-      //   this.$store.dispatch('alert/updateMessage', {
-      //     message: '請選擇尺寸！',
-      //     status: 'danger'
-      //   })
-      //   return
-      // }
-
       this.isLoading = true
       const product = {
         id: this.productInfo.id,
@@ -114,6 +112,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.pre {
+  font-size: 100%;
+}
 </style>

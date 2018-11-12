@@ -55,22 +55,8 @@
               </div>
                 <div class="form-group col-md-6">
                   <label for="size">數量</label>
-                  <!-- <div class="btn-group" role="group" aria-label="First group">
-                    <button type="button"
-                      :class="sizeTypeButtonClass('clothing')"
-                      @click="setSizeType('clothing')"
-                    >服飾</button>
-                    <button type="button"
-                      :class="sizeTypeButtonClass('accessory')"
-                      @click="setSizeType('accessory')"
-                    >飾品</button>
-                    <button type="button"
-                      :class="sizeTypeButtonClass('shoes')"
-                      @click="setSizeType('shoes')"
-                    >鞋款</button>
-                  </div> -->
                   <input type="number" class="form-control" id="size"
-                    placeholder="請輸入商品尺寸"
+                    placeholder="請輸入數量"
                     v-model.number="productData.amount"
                   >
                 </div>
@@ -80,7 +66,7 @@
                   <label for="category">分類</label>
                   <input type="text" class="form-control" id="category"
                     placeholder="請輸入分類"
-                    v-model="productData.category.class"
+                    v-model="productData.category.type"
                   >
                 </div>
                 <div class="form-group col-md-6">
@@ -111,7 +97,7 @@
               <hr>
 
               <div class="form-group">
-                <label for="description">產品描述</label>
+                <label for="description">商品介紹</label>
                 <textarea type="text" class="form-control" id="description"
                   placeholder="請輸入產品描述"
                   v-model="productData.description"
@@ -120,6 +106,7 @@
               <div class="form-group">
                 <label for="content">商品備註</label>
                 <textarea type="text" class="form-control" id="content"
+                  rows="3"
                   placeholder="請輸入商品備註"
                   v-model="productData.content"
                 ></textarea>
@@ -141,9 +128,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
-            @click="clearData"
-          >取消</button>
+          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">取消</button>
           <ActionButton
             colorStyle="primary"
             btnLabel="確認"
@@ -157,27 +142,8 @@
 </template>
 
 <script>
-// 由於要做服飾購物， 這邊category 裝物件來決定品牌與類型(上衣、褲子)，並多裝size決定尺寸
-// 購物頁面前端再次過濾同名商品，集合成單一物件提供尺寸表陣列選擇尺寸
-const productDataTemplate = {
-  title: '',
-  category: {
-    brand: '',
-    class: ''
-  },
-  origin_price: 0,
-  price: 0,
-  amount: 1,
-  unit: '件',
-  image: '',
-  description: '',
-  content: '',
-  is_enabled: 0,
-  imageUrl: ''
-}
-
 import $ from 'jquery'
-import cloneDeep from 'lodash/clonedeep'
+import cloneDeep from 'lodash/clonedeep'  // template中有多層物件，故用深層複製
 import ActionButton from '@/components/ActionButton'
 export default {
   props: {
@@ -187,8 +153,8 @@ export default {
     },
     productInfo: {
       type: Object,
-      default(){
-        return productDataTemplate
+      default(){        
+        return this.$store.state.product.productTemplate
       }
     }
   },
@@ -197,7 +163,7 @@ export default {
   },
   data(){
     return {
-      productData: cloneDeep(this.productInfo),
+      productData: cloneDeep(this.productInfo), // 每次都複製新物件參考，確保不會改到template
       isLoading: false,
       isUploadingLoading: false,
     }
@@ -213,16 +179,12 @@ export default {
     }
   },
   methods: {
-    clearData(){
-      this.productData = cloneDeep(productDataTemplate)
-    },
     uploadFile(){
       this.isUploadingLoading = true
-      const uploadedFile = this.$refs.file.files[0]
-      console.log(uploadedFile)
-      
+      const uploadedFile = this.$refs.file.files[0]      
       const formData = new FormData()
       formData.append('file-to-upload', uploadedFile)
+
       const API = `${process.env.API_PATH}/api/${process.env.CUSTOM_API_PATH}/admin/upload`
       this.$http.post(API, formData, {
         headers: {
@@ -231,6 +193,17 @@ export default {
       })
         .then( ({data}) => {
           this.isUploadingLoading = false
+
+          this.$store.dispatch('alert/updateMessage', {
+            message: data.success === true
+              ? '上傳圖片成功'
+              : '上傳圖片失敗'
+            ,
+            status: data.success === true
+              ? 'success'
+              : 'danger'
+          })
+
           if(data.success){
             this.$set(this.productData, 'imageUrl', data.imageUrl)
           }
@@ -243,26 +216,23 @@ export default {
     confirm(){
       console.log('確定' + this.operateType)
 
+      if(this.productData.price > this.productData.origin_price){
+        this.$store.dispatch('alert/updateMessage', {
+          message: '原價不可小於特價',
+          status: 'danger'
+        })
+        return
+      }
+
       this.isLoading = true
       this.$store.dispatch(`product/${this.operateType}Product`, this.productData)
         .then(() => {
           this.isLoading = false
-          this.clearData()
           $(`#${this.operateType}ProductModal`).modal('hide')
         })
-    },
-    sizeTypeButtonClass(type){
-      return {
-        btn: true,
-        'btn-outline-secondary': this.productData.size !== type,
-        'btn-secondary': this.productData.size === type
-      }
-    },
-    setSizeType(type){
-      this.productData.size = type
     }
   },
-  // 偵聽上層組件若有注入prop即表示要編輯商品
+  // 偵聽上層組件若有變更prop則更新data建立新物件參考
   watch: {
     productInfo(){
       this.productData = cloneDeep(this.productInfo)
@@ -272,15 +242,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.btn-group {
-  display: flex;
-  .btn {
-    flex: 1
-  }
-}
-.btn-group-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
 </style>

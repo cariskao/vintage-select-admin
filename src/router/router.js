@@ -13,6 +13,10 @@ import Orders from '@/components/pages/Orders'
 const router = new Router({
   routes: [
     {
+      path: '/',
+      redirect: '/login'
+    },
+    {
       path: '/login',
       component: Login
     },

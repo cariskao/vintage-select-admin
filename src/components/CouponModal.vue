@@ -60,9 +60,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
-            @click="clearData"
-          >取消</button>
+          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">取消</button>
           <ActionButton
             colorStyle="primary"
             btnLabel="確認"
@@ -76,14 +74,6 @@
 </template>
 
 <script>
-const couponDataTemplate = {
-  title: '',
-  code: '',
-  percent: 100,
-  due_date: new Date(),
-  is_enabled: 0,
-}
-
 import $ from 'jquery'
 import VueDatepickerLocal from 'vue-datepicker-local'
 import ActionButton from '@/components/ActionButton'
@@ -96,7 +86,7 @@ export default {
     couponInfo: {
       type: Object,
       default(){
-        return couponDataTemplate
+        return this.$store.state.coupon.couponTemplate
       }
     }
   },
@@ -121,30 +111,29 @@ export default {
     }
   },
   methods: {
-    clearData(){
-      this.couponData = { ...couponDataTemplate }
-    },
-    cancel(){
-      console.log('取消');
-      this.clearData()
-    },
     confirm(){
       console.log('確定' + this.operateType)
-      this.isLoading = true
-      const data = {
-        ...this.couponData
+
+      if(this.couponData.percent < 1 || this.couponData.percent > 100){
+        this.$store.dispatch('alert/updateMessage', {
+          message: '請輸入1~100間的折扣比',
+          status: 'danger'
+        })
+        return
       }
+
+      this.isLoading = true
+      const data = { ...this.couponData }
       data.due_date = data.due_date.getTime() / 1000
 
       this.$store.dispatch(`coupon/${this.operateType}Coupon`, data)
         .then(() => {
           this.isLoading = false
           $(`#${this.operateType}CouponModal`).modal('hide')
-          this.clearData()
         })
     }
   },
-  // 偵聽上層組件若有注入prop即表示要編輯優惠券
+  // 偵聽上層組件若有注入prop即重設物件
   watch: {
     couponInfo(){
       this.couponData = {...this.couponInfo}

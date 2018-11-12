@@ -5,7 +5,14 @@ export default {
   state: {
     coupons: [],
     pagination: {},
-    isPageLoading: false
+    isPageLoading: false,
+    couponTemplate: {     // 新增coupon的物件模板
+      title: '',
+      code: '',
+      percent: 100,
+      due_date: new Date(),
+      is_enabled: 0,
+    }
   },
   mutations: {
     setCoupons(state, coupons){

@@ -5,7 +5,12 @@ export default {
   namespaced: true,
   state: {
     products: [],
-    product:{},
+    product:{
+      category: {
+        brand: '',
+        type: ''
+      }
+    },
     pagination: {},
     isPageLoading: false,
     cart: {
