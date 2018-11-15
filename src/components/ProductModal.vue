@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" :id="id" tabindex="-1" role="dialog"
+  <div class="modal fade" id="operateProductModal" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content border-0">
@@ -163,15 +163,13 @@ export default {
   },
   data(){
     return {
-      productData: cloneDeep(this.productInfo), // 每次都複製新物件參考，確保不會改到template
+      // 每次都複製新物件參考，確保不會改到template與props
+      productData: cloneDeep(this.productInfo), 
       isLoading: false,
       isUploadingLoading: false,
     }
   },
   computed: {
-    id(){
-      return `${this.operateType}ProductModal`
-    },
     modalTitle(){
       return this.operateType === 'add'
         ? '新增產品'
@@ -228,18 +226,19 @@ export default {
       this.$store.dispatch(`product/${this.operateType}Product`, this.productData)
         .then(() => {
           this.isLoading = false
-          $(`#${this.operateType}ProductModal`).modal('hide')
+          $('#operateProductModal').modal('hide')
         })
-    }
+    },
+    
+    
   },
-  // 偵聽上層組件若有變更prop則更新data建立新物件參考
-  watch: {
-    productInfo(){
-      this.productData = cloneDeep(this.productInfo)
-    }
+  mounted(){
+    // 由父層v-if動態決定是否生成該組件，當生成完畢即自動開啟
+    $('#operateProductModal').modal('show')
+    // modal組件生成時監聽關閉事件，以清空currentOperateType來摧毀該組件
+    $('#operateProductModal').on('hidden.bs.modal', () => {
+      this.$emit('modalHidden')
+    })
   }
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

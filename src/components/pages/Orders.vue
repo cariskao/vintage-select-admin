@@ -30,13 +30,14 @@
     />
 
     <OrderModal
+      v-if="modalActive"
       :orderInfo="tempOperateData"
+      @modalHidden="modalActive = false"
     />
   </div>
 </template>
 
 <script>
-import $ from 'jquery'
 import { mapState, mapActions } from 'vuex'
 import OrderItem from '@/components/OrderItem'
 import OrderModal from '@/components/OrderModal'
@@ -52,7 +53,8 @@ export default {
       tempOperateData: {
         user: {},
         products: []
-      }
+      },
+      modalActive: false
     }
   },
   computed: {
@@ -66,7 +68,7 @@ export default {
     ...mapActions('order', ['getOrders']),
     showOrderModal(data){
       this.tempOperateData = data
-      $('#orderMoadl').modal('show')
+      this.modalActive = true
     }
   },
   mounted() {

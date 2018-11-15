@@ -4,7 +4,7 @@
     <div class="mt-4">
       <button
         class="btn btn-primary"
-        @click="addProductModal"
+        @click="showModal( { type: 'add' } )"
       >
         新增商品
       </button>
@@ -27,8 +27,8 @@
           v-for="product in products"
           :key="product.id"
           :productInfo="product"
-          @editProduct="editProductModal"
-          @deleteProduct="deleteProductModal"
+          @editProduct="showModal"
+          @deleteProduct="showModal"
         />
       </tbody>
     </table>
@@ -40,15 +40,22 @@
     />
 
     <!-- Modal -->
-    <ProductModal :productInfo="tempOperateData" operateType="add"/>
-    <ProductModal :productInfo="tempOperateData" operateType="edit"/>
-    <DeleteProductModal :productInfo="tempOperateData"/>
+    <ProductModal
+      v-if="currentOperateType === 'add' || currentOperateType === 'edit'"
+      :operateType="currentOperateType"
+      :productInfo="tempOperateData"
+      @modalHidden="currentOperateType = ''"
+    />
+    <DeleteProductModal
+      v-if="currentOperateType === 'delete'"
+      :productInfo="tempOperateData"
+      @modalHidden="currentOperateType = ''"
+    />
 
   </div>
 </template>
 
 <script>
-import $ from 'jquery'
 import { mapState } from 'vuex'
 import ProductItem from '@/components/ProductItem'
 import ProductModal from '@/components/ProductModal'
@@ -63,37 +70,34 @@ export default {
   },
   data(){
     return {
-      tempOperateData: {
-        category: {
-          brand: '',
-          type: ''
-        }
-      },
+      tempOperateData: {},
+      currentOperateType: '' // add edit delete 三種
     }
   },
   computed: {
     ...mapState('product' , ['products', 'pagination', 'isPageLoading']),
   },
   methods: {
-    addProductModal(){
-      // 修改物件參考，否則不會觸發modal內的watch
-      this.tempOperateData = { ...this.$store.state.product.productTemplate }
-      $('#addProductModal').modal('show')
+    showModal( { data = null, type } ){
+      // 先準備好操作的物件，確保modal組件生成時注入內部創建data
+      this.tempOperateData = data || this.$store.state.product.productTemplate
+      this.currentOperateType = type
+      // modal組件mounted會自動執行開啟
     },
-    editProductModal(data){
-      // 修改物件參考，否則不會觸發modal內的watch
-      this.tempOperateData = { ...data }
-      $('#editProductModal').modal('show')
-    },
-    deleteProductModal(data){
-      this.tempOperateData = data
-      $('#deleteProductModal').modal('show')
-    }
   },
   mounted() {
     this.$store.dispatch('product/getProducts')
   },
 }
+
+// modal邏輯
+// 開啟
+// 每次操作產品前，先設定currentOperateType ->
+// 設定完觸發modal組件v-if，生成modal組件同時將操作物件注入modal props -> 
+// modal組件內data生成完畢，mounted時觸發開啟彈窗
+// 關閉
+// 關閉彈窗事件觸發 -> 修改currentOperateType為空 -> 
+// modal組件摧毀，確保下次生成新的modal與新的資料
 </script>
 
 <style>

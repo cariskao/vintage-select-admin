@@ -6,10 +6,10 @@
     <td :class="enabledColor">{{enabledSpan}}</td>
     <td>
       <button class="btn btn-outline-primary btn-sm"
-        @click="editCoupon"
+        @click="operateCoupon('edit')"
       >編輯</button>
       <button class="btn btn-outline-danger btn-sm"
-        @click="deleteCoupon"
+        @click="operateCoupon('delete')"
       >刪除</button>
     </td>
   </tr>
@@ -48,6 +48,16 @@ export default {
     },
     deleteCoupon(){
       this.$emit('deleteCoupon', this.couponInfo)
+    },
+    operateCoupon(type){
+      const data = { ...this.couponInfo }
+      // 手動修改為日期格式才可正確填入
+      data.due_date = new Date(data.due_date * 1000)
+
+      this.$emit(`${type}Coupon`, {
+        data,
+        type
+      })
     }
   }
 }

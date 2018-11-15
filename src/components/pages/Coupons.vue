@@ -4,7 +4,7 @@
     <div class="mt-4">
       <button
         class="btn btn-primary"
-        @click="addCoupon"
+        @click="showModal( { type: 'add' } )"
       >
         新增優惠券
       </button>
@@ -24,8 +24,8 @@
           v-for="coupon in coupons"
           :key="coupon.id"
           :couponInfo="coupon"
-          @editCoupon="editCouponModal"
-          @deleteCoupon="deleteCouponModal"
+          @editCoupon="showModal"
+          @deleteCoupon="showModal"
         />
       </tbody>
     </table>
@@ -37,15 +37,22 @@
     />
 
     <!-- Modal -->
-    <CouponModal :couponInfo="tempOperateData" operateType="add"/>
-    <CouponModal :couponInfo="tempOperateData" operateType="edit"/>
-    <DeleteCouponModal :couponInfo="tempOperateData"/>
+    <CouponModal
+      v-if="currentOperateType === 'add' || currentOperateType === 'edit'"
+      :operateType="currentOperateType"
+      :couponInfo="tempOperateData"
+      @modalHidden="currentOperateType = ''"
+    />
+    <DeleteCouponModal
+      v-if="currentOperateType === 'delete'"
+      :couponInfo="tempOperateData"
+      @modalHidden="currentOperateType = ''"
+    />
 
   </div>
 </template>
 
 <script>
-import $ from "jquery";
 import { mapState, mapActions } from "vuex";
 import CouponModal from '@/components/CouponModal'
 import DeleteCouponModal from '@/components/DeleteCouponModal'
@@ -60,7 +67,8 @@ export default {
   },
   data(){
     return {
-      tempOperateData: {}
+      tempOperateData: {},
+      currentOperateType: '' // add edit delete 三種
     }
   },
   computed: {
@@ -68,19 +76,11 @@ export default {
   },
   methods: {
     ...mapActions('coupon', ['getCoupons']),
-    addCoupon(){
-      // 修改物件參考，否則不會觸發modal內的watch
-      this.tempOperateData = { ...this.$store.state.coupon.couponTemplate }
-      $('#addCouponModal').modal('show')
-    },
-    editCouponModal(couponInfo){
-      // 修改物件參考，否則不會觸發modal內的watch
-      this.tempOperateData = { ...couponInfo }
-      $('#editCouponModal').modal('show')
-    },
-    deleteCouponModal(couponInfo){
-      this.tempOperateData = couponInfo
-      $('#deleteCouponModal').modal('show')
+    showModal( { data = null, type } ){
+      // 先準備好操作的物件，確保modal組件生成時注入內部創建data
+      this.tempOperateData = data || this.$store.state.coupon.couponTemplate
+      this.currentOperateType = type
+      // modal組件mounted會自動執行開啟
     },
   },
   mounted() {

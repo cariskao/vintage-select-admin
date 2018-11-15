@@ -9,10 +9,10 @@
     <td :class="enabledColor">{{ enabledSpan }}</td>
     <td>
       <button class="btn btn-outline-primary btn-sm"
-        @click="editProduct"
+        @click="operateProduct('edit')"
       >編輯</button>
       <button class="btn btn-outline-danger btn-sm"
-        @click="deleteProduct"
+        @click="operateProduct('delete')"
       >刪除</button>
     </td>
   </tr>
@@ -39,12 +39,12 @@ export default {
     }
   },
   methods: {
-    editProduct(){
-      this.$emit('editProduct', this.productInfo)
-    },
-    deleteProduct(){
-      this.$emit('deleteProduct', this.productInfo)
-    },
+    operateProduct(type){
+      this.$emit(`${type}Product`, {
+        data: this.productInfo,
+        type
+      })
+    }
   }
 }
 </script>

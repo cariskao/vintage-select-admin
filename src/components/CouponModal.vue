@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" :id="id" tabindex="-1" role="dialog"
+  <div class="modal fade" id="operateCouponModal" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content border-0">
@@ -101,9 +101,6 @@ export default {
     }
   },
   computed: {
-    id(){
-      return `${this.operateType}CouponModal`
-    },
     modalTitle(){
       return this.operateType === 'add'
         ? '新增優惠券'
@@ -123,21 +120,24 @@ export default {
       }
 
       this.isLoading = true
+      // 轉換時間格式給後端
       const data = { ...this.couponData }
       data.due_date = data.due_date.getTime() / 1000
 
       this.$store.dispatch(`coupon/${this.operateType}Coupon`, data)
         .then(() => {
           this.isLoading = false
-          $(`#${this.operateType}CouponModal`).modal('hide')
+          $('#operateCouponModal').modal('hide')
         })
     }
   },
-  // 偵聽上層組件若有注入prop即重設物件
-  watch: {
-    couponInfo(){
-      this.couponData = {...this.couponInfo}
-    }
+  mounted(){
+    // 由父層v-if動態決定是否生成該組件，當生成完畢即自動開啟
+    $('#operateCouponModal').modal('show')
+    // modal組件生成時監聽關閉事件，以清空currentOperateType來摧毀該組件
+    $('#operateCouponModal').on('hidden.bs.modal', () => {
+      this.$emit('modalHidden')
+    })
   }
 }
 </script>
