@@ -1,8 +1,8 @@
 <template>
-  <div class="my-5 row justify-content-center">
+  <div class="my-5 row justify-content-center cart-wrapper">
     <div class="my-5 row justify-content-center">
 
-      <loading :active.sync="isLoading"/>
+      <loading :active.sync="isCartLoading" :is-full-page="false"/>
 
       <table class="table">
         <thead>
@@ -65,7 +65,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('shopping', ['cart', 'isLoading'])
+    ...mapState('shopping', ['cart', 'isCartLoading'])
   },
   methods: {
     ...mapActions('shopping', ['deleteCartItem']),
@@ -83,6 +83,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+// 給loading-overlay定位用
+.cart-wrapper {
+  position: relative;
+}
 </style>

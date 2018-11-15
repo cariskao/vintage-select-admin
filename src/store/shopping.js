@@ -13,6 +13,7 @@ export default {
     },
     pagination: {},
     isPageLoading: false,
+    isCartLoading: false,
     cart: {
       carts: []
     },
@@ -44,6 +45,9 @@ export default {
     },
     setPageLoading(state, boolean){
       state.isPageLoading = boolean
+    },
+    setCartLoading(state, boolean){
+      state.isCartLoading = boolean
     }
   },
   actions: {
@@ -117,16 +121,16 @@ export default {
       const API = `
         ${process.env.API_PATH}/api/${process.env.CUSTOM_API_PATH}/cart
       `
-      commit('setPageLoading', true)
+      commit('setCartLoading', true)
       axios.get(API)
         .then( ({data}) => {
           console.log('購物車資訊', data.data)
           commit('setCart', data.data)
-          commit('setPageLoading', false)
+          commit('setCartLoading', false)
         })
         .catch(err => {
           console.error(err)
-          commit('setPageLoading', false)
+          commit('setCartLoading', false)
         })
     },
     deleteCartItem({dispatch}, cartItemId){
