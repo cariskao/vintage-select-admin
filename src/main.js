@@ -65,17 +65,14 @@ router.beforeEach( (to, from, next) => {
     console.log('此頁面需驗證登入')
 
     store.dispatch('adminUser/checkAdminUser')
-      .then(
-        () => {
-          next()
-        },
-        (errorMessage) => {
-          alert(errorMessage)
-          next({
-            path: '/login'
-          })
-        }
-      )
+      .then(() => {
+        next()
+      },(errorMessage) => {
+        alert(errorMessage)
+        next({
+          path: '/login'
+        })
+      })
   }else{
     next()
   }

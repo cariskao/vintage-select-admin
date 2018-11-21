@@ -68,6 +68,7 @@
 </template>
 
 <script>
+import $ from 'jquery'
 import ActionButton from '@/components/ActionButton'
 export default {
   props: {
@@ -80,7 +81,6 @@ export default {
   },
   data(){
     return {
-      size: '',
       qty: 1, //quantity
       isLoading: false
     }
@@ -105,9 +105,17 @@ export default {
         .then(() => {
           this.isLoading = false
           this.qty = 1
-          this.$emit('closeModal')
+          $('#SimulateOrderModal').modal('hide')
         })
     }
+  },
+  mounted(){
+    // 由父層v-if動態決定是否生成該組件，當生成完畢即自動開啟
+    $('#SimulateOrderModal').modal('show')
+    // modal組件生成時監聽關閉事件，以清空currentOperateType來摧毀該組件
+    $('#SimulateOrderModal').on('hidden.bs.modal', () => {
+      this.$emit('modalHidden')
+    })
   }
 }
 </script>

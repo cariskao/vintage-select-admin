@@ -55,7 +55,5 @@ export default {
   position: absolute;
   top: auto;
   left: auto;
-  // transform: translate(-50%, -50%)
-  transform: translateX(50px)
 }
 </style>

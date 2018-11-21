@@ -18,19 +18,13 @@
           </div>
         </div>
       </div>
-      <div class="card-footer d-flex">
+      <div class="card-footer">
         <ActionButton
+          class="btn-block btn-lg"
           colorStyle="outline-secondary"
-          btnLabel="查看更多"
+          btnLabel="購買商品"
           :isLoading="isLoading.checkDetail"
           @click.native="checkDetail( productInfo.id )"
-        />
-        <ActionButton
-          class="ml-auto"
-          colorStyle="outline-danger"
-          btnLabel="加到購物車"
-          :isLoading="isLoading.addToCart"
-          @click.native="addToCart( {id: productInfo.id} )"
         />
       </div>
     </div>
@@ -64,14 +58,8 @@ export default {
       this.$store.dispatch('shopping/getProduct', id)
         .then(() => {
           this.isLoading.checkDetail = false
-          this.$emit('checkDetail', id)
+          this.$emit('checkDetail')
         })
-        .catch(() => this.isLoading.checkDetail = false)
-    },
-    addToCart(product){
-      this.isLoading.addToCart = true
-      this.$store.dispatch('shopping/addToCart', product)
-        .then(() => this.isLoading.addToCart = false)
         .catch(() => this.isLoading.checkDetail = false)
     },
     image(url){

@@ -229,8 +229,6 @@ export default {
           $('#operateProductModal').modal('hide')
         })
     },
-    
-    
   },
   mounted(){
     // 由父層v-if動態決定是否生成該組件，當生成完畢即自動開啟

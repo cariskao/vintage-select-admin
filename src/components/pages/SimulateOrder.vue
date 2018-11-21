@@ -28,15 +28,15 @@
       v-if="cart.carts.length > 0"
     />
 
-    <SimulateOrderModal 
+    <SimulateOrderModal
+      v-if="showModal"
       :productInfo="product"
-      @closeModal="closeModal"
+      @modalHidden="showModal = false"
     />
   </div>
 </template>
 
 <script>
-import $ from 'jquery'
 import { mapState, mapActions, mapGetters} from 'vuex'
 import SimulateOrderItem from '@/components/SimulateOrderItem'
 import SimulateOrderModal from '@/components/SimulateOrderModal'
@@ -51,6 +51,11 @@ export default {
     Pagination,
     SimulateOrderModal
   },
+  data(){
+    return {
+      showModal: false
+    }
+  },
   computed: {
     ...mapState('shopping', [
       'product',
@@ -63,11 +68,8 @@ export default {
   methods: {
     ...mapActions('shopping', ['getProducts', 'getCart']),
     checkDetail(id){
-      $('#SimulateOrderModal').modal('show')
+      this.showModal = true
     },
-    closeModal(){
-      $('#SimulateOrderModal').modal('hide')
-    }
   },
   mounted() {
     this.getProducts()

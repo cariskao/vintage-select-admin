@@ -5,7 +5,7 @@
         :class="isDisabled('pre')"
       >
         <a class="page-link" href="#" aria-label="Previous"
-          @click.prevent="getProducts(pagination.current_page - 1)"
+          @click.prevent="getData(pagination.current_page - 1)"
         >
           <span aria-hidden="true">&laquo;</span>
           <span class="sr-only">Previous</span>
@@ -17,7 +17,7 @@
         :class="pageActive(page)"
       >
         <a class="page-link" href="#"
-          @click.prevent="getProducts(page)"
+          @click.prevent="getData(page)"
         >
           {{page}}
         </a>
@@ -26,7 +26,7 @@
         :class="isDisabled('next')"
       >
         <a class="page-link" href="#" aria-label="Next"
-          @click.prevent="getProducts(pagination.current_page + 1)"
+          @click.prevent="getData(pagination.current_page + 1)"
         >
           <span aria-hidden="true">&raquo;</span>
           <span class="sr-only">Next</span>
@@ -53,7 +53,7 @@ export default {
     }
   },
   methods: {
-    getProducts(page){
+    getData(page){
       this.$store.dispatch(`${this.module}/${this.api}`, page)
     },
     pageActive(page){

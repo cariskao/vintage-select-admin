@@ -74,6 +74,7 @@ export default {
         ${process.env.API_PATH}/api/${process.env.CUSTOM_API_PATH}/product/${id}
       `
       // 因為可能產品未啟用所以才這樣寫
+      // 前台有過濾掉未啟用商品
       // 彈窗在觸發在page組件，用promise處理是否開啟彈窗
       return new Promise((resolve, reject) => {
         axios.get(API)
