@@ -1,11 +1,8 @@
 # Vintage Select Admin
-
-> hexschool vue final homework 
->
-> vintage select 古著選物管理員後台
->
-> 請搭配前台做服用
->
+[DEMO](https://linwei5316.github.io/vintage-select-admin/) <br>
+> hexschool vue final homework <br>
+> vintage select 古著選物管理員後台 <br>
+> 請搭配前台做服用 <br>
 > API sorce：hexschool  個人練習作品，無商業用途
 
 ## Build Setup
